@@ -1,6 +1,5 @@
 import { Schema, model } from 'mongoose';
 import validator from 'validator';
-import bcrypt from 'bcrypt';
 import {
   TGuardian,
   TLocalGuardian,
@@ -8,7 +7,6 @@ import {
   StudentModel,
   UserName,
 } from './student.interface';
-import config from '../../config';
 
 const userNameSchema = new Schema<UserName>({
   firstName: {
@@ -98,10 +96,6 @@ const studentSchema = new Schema<TStudent, StudentModel>(
       ref: 'User',
     },
 
-    password: {
-      type: String,
-      required: [true, 'Password is required'],
-    },
     name: {
       type: userNameSchema,
       required: [true, 'Name is required'],
@@ -176,27 +170,6 @@ const studentSchema = new Schema<TStudent, StudentModel>(
 // virtual
 studentSchema.virtual('fullName').get(function () {
   return `${this.name.firstName} ${this.name.middleName} ${this.name.lastName}`;
-});
-
-// pre save middleware/hook will work when creating user
-studentSchema.pre('save', async function (next) {
-  // eslint-disable-next-line @typescript-eslint/no-this-alias
-  const user = this;
-
-  user.password = await bcrypt.hash(
-    user.password,
-    Number(config.bcrypt_salt_rounds),
-  );
-  next();
-});
-
-studentSchema.post('save', async function (doc, next) {
-  doc.password = '';
-  next();
-});
-studentSchema.post('save', async function (doc, next) {
-  doc.password = '';
-  next();
 });
 
 // query middleware
