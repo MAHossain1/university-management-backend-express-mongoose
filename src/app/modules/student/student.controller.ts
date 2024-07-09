@@ -1,9 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { StudentServices } from './student.service';
 // import studentValidationSchema from './student.joi.validation';
 
-const getStudentsFromDB = async (req: Request, res: Response) => {
+const getStudentsFromDB = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const result = await StudentServices.getStudentsFromDB();
     res.status(200).json({
@@ -11,16 +15,16 @@ const getStudentsFromDB = async (req: Request, res: Response) => {
       message: 'Student retrieved successfully',
       data: result,
     });
-  } catch (error: any) {
-    res.status(500).json({
-      success: false,
-      message: error.message || 'Something went wrong',
-      error,
-    });
+  } catch (error) {
+    next(error);
   }
 };
 
-const getStudentById = async (req: Request, res: Response) => {
+const getStudentById = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const studentId = req.params.id;
     const result = await StudentServices.getStudentById(studentId);
@@ -30,15 +34,15 @@ const getStudentById = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: 'Something went wrong',
-      error,
-    });
+    next(error);
   }
 };
 
-const deleteStudent = async (req: Request, res: Response) => {
+const deleteStudent = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const studentId = req.params.id;
     const result = await StudentServices.deleteStudentById(studentId);
@@ -48,11 +52,7 @@ const deleteStudent = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: 'Something went wrong',
-      error,
-    });
+    next(error);
   }
 };
 

@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import app from './app';
-import config from './config';
+import config from './app/config';
 
 async function main() {
   try {
@@ -8,7 +8,7 @@ async function main() {
 
     app.listen(config.port, () => {
       console.log(
-        `Professional backend project running on port ${config.port}`
+        `Professional backend project running on port ${config.port}`,
       );
     });
   } catch (error) {
