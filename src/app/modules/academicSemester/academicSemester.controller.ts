@@ -6,12 +6,9 @@ import { AcademicSemesterServices } from './academicSemester.service';
 
 const createAcademicSemester = catchAsync(
   async (req: Request, res: Response): Promise<void> => {
-    const { academicSemesterData } = req.body;
-
-    const result =
-      await AcademicSemesterServices.createAcademicSemester(
-        academicSemesterData,
-      );
+    const result = await AcademicSemesterServices.createAcademicSemester(
+      req.body,
+    );
 
     sendResponse(res, {
       success: true,
