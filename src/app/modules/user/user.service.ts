@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import config from '../../config';
 import { AcademicSemester } from '../academicSemester/academicSemester.model';
 import { TStudent } from '../student/student.interface';
@@ -5,6 +6,8 @@ import { Student } from '../student/student.model';
 import { TUser } from './user.interface';
 import { User } from './user.model';
 import { generateStudentId } from './user.utils';
+import AppError from '../../errors/AppError';
+import httpStatus from 'http-status';
 
 const createStudentIntoDB = async (password: string, studentData: TStudent) => {
   // create a user object
@@ -21,21 +24,39 @@ const createStudentIntoDB = async (password: string, studentData: TStudent) => {
     studentData.admissionSemester,
   );
 
-  userData.id = await generateStudentId(academicSemester);
+  const session = await mongoose.startSession();
 
-  // create a user
-  const newUser = await User.create(userData);
+  try {
+    session.startTransaction();
 
-  // create a student
-  if (Object.keys(newUser).length) {
-    studentData.id = userData.id;
-    studentData.user = newUser._id;
+    userData.id = await generateStudentId(academicSemester);
 
-    const newStudent = await Student.create(studentData);
+    // create a user first transaction
+    const newUser = await User.create([userData], { session });
+
+    if (!newUser.length) {
+      throw new AppError(httpStatus.BAD_REQUEST, 'Failed to create new user');
+    }
+
+    // set id, _id as user
+    studentData.id = newUser[0].id;
+    studentData.user = newUser[0]._id;
+
+    // create a student transaction 2
+    const newStudent = await Student.create([studentData], { session });
+
+    if (!newStudent.length) {
+      throw new AppError(httpStatus.BAD_REQUEST, 'Failed to create student.');
+    }
+
+    await session.commitTransaction();
+    await session.endSession();
+
     return newStudent;
+  } catch (error) {
+    await session.abortTransaction();
+    await session.endSession();
   }
-
-  return newUser;
 };
 
 export const UserServices = {
