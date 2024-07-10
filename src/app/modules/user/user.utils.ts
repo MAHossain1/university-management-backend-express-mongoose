@@ -6,24 +6,34 @@ export const findLastStudentId = async (): Promise<string | undefined> => {
     .sort({ createdAt: -1 })
     .lean();
 
-  return lastStudent?.id ? lastStudent.id.substring(4) : undefined;
+  return lastStudent?.id ? lastStudent.id : undefined;
 };
 
 export const generateStudentId = async (
   academicSemester: TAcademicSemester | null,
 ): Promise<string> => {
-  const lastStudent = await findLastStudentId();
+  let currentId = (0).toString();
 
-  const currentId = lastStudent || (0).toString().padStart(5, '0');
+  const lastStudentId = await findLastStudentId();
 
-  let incrementedId = (parseInt(currentId) + 1).toString().padStart(5, '0');
+  const lastStudentYear = lastStudentId?.substring(0, 4);
+  const lastStudentSemesterCode = lastStudentId?.substring(4, 6);
+  const currentSemesterCode = academicSemester?.code;
+  const currentYear = academicSemester?.year;
 
-  const yearString = academicSemester?.year.toString();
+  if (
+    lastStudentId &&
+    lastStudentSemesterCode === currentSemesterCode &&
+    lastStudentYear === currentYear
+  ) {
+    currentId = lastStudentId.substring(6);
+  }
 
-  incrementedId = `${yearString?.substring(2)}${
+  let incrementedId = (parseInt(currentId) + 1).toString().padStart(4, '0');
+
+  incrementedId = `${academicSemester?.year}${
     academicSemester?.code
   }${incrementedId}`;
-  // console.log(incrementedId);
 
   return incrementedId;
 };
