@@ -7,6 +7,7 @@ import { UserServices } from './user.service';
 const createStudent = catchAsync(
   async (req: Request, res: Response): Promise<void> => {
     const { password, student: studentData } = req.body;
+    console.log(studentData);
 
     // const zodParsedData = studentValidationSchema.parse(studentData);
 
