@@ -21,7 +21,14 @@ const getStudentsFromDB = async () => {
 const getStudentById = async (id: string) => {
   const result = await Student.findOne({
     id,
-  });
+  })
+    .populate('admissionSemester')
+    .populate({
+      path: 'academicDepartment',
+      populate: {
+        path: 'academicFaculty',
+      },
+    });
   return result;
 };
 
@@ -88,7 +95,14 @@ const updateStudentIntoDB = async (id: string, payload: Partial<TStudent>) => {
 
   const result = await Student.findOneAndUpdate({ id }, modifiedStudentData, {
     new: true,
-  });
+  })
+    .populate('admissionSemester')
+    .populate({
+      path: 'academicDepartment',
+      populate: {
+        path: 'academicFaculty',
+      },
+    });
 
   return result;
 };
