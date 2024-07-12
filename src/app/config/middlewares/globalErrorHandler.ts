@@ -7,6 +7,7 @@ import handleZodError from '../../errors/handleZodError';
 import config from '..';
 import handleValidationError from '../../errors/handleValidationError';
 import handleCastError from '../../errors/handleCastError';
+import handleDuplicateError from '../../errors/handleDuplicateError';
 
 const globalErrorHandler: ErrorRequestHandler = (
   error,
@@ -38,6 +39,11 @@ const globalErrorHandler: ErrorRequestHandler = (
     statusCode = simplifiedError.statusCode;
     message = simplifiedError.message;
     errorSources = simplifiedError.errorSources;
+  } else if (error?.code === 11000) {
+    const simplifiedError = handleDuplicateError(error);
+    statusCode = simplifiedError.statusCode;
+    message = simplifiedError.message;
+    errorSources = simplifiedError.errorSources;
   }
 
   return res.status(statusCode).json({
@@ -47,6 +53,7 @@ const globalErrorHandler: ErrorRequestHandler = (
     // error,
     stack: config.node_env !== 'production' ? error?.stack : null,
   });
+  next();
 };
 
 export default globalErrorHandler;
