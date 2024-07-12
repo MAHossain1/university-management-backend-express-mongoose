@@ -5,6 +5,7 @@ import { TErrorSources } from '../../interface/error';
 import { ZodError } from 'zod';
 import handleZodError from '../../errors/handleZodError';
 import config from '..';
+import handleValidationError from '../../errors/handleValidationError';
 
 const globalErrorHandler: ErrorRequestHandler = (
   error,
@@ -26,12 +27,18 @@ const globalErrorHandler: ErrorRequestHandler = (
     statusCode = simplifiedError.statusCode;
     message = simplifiedError.message;
     errorSources = simplifiedError.errorSources;
+  } else if (error?.name === 'ValidationError') {
+    const simplifiedError = handleValidationError(error);
+    statusCode = simplifiedError.statusCode;
+    message = simplifiedError.message;
+    errorSources = simplifiedError.errorSources;
   }
 
   return res.status(statusCode).json({
     success: false,
     message,
     errorSources,
+    // error,
     stack: config.node_env !== 'production' ? error?.stack : null,
   });
 };
