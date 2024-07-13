@@ -20,7 +20,9 @@ const createAcademicDepartmentIntoDB = catchAsync(
 
 const getAllAcademicDepartment = catchAsync(
   async (req: Request, res: Response): Promise<void> => {
-    const result = await AcademicDepartmentServices.getAllAcademicDepartment();
+    const result = await AcademicDepartmentServices.getAllAcademicDepartment(
+      req.query,
+    );
 
     sendResponse(res, {
       success: true,
