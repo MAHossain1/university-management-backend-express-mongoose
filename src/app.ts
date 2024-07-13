@@ -1,5 +1,5 @@
 import cors from 'cors';
-import express, { Application, Request, Response } from 'express';
+import express, { Application } from 'express';
 import globalErrorHandler from './app/config/middlewares/globalErrorHandler';
 import notFound from './app/config/middlewares/notfound';
 import router from './app/routes';
@@ -11,9 +11,12 @@ app.use(cors());
 // application routes
 app.use('/api/v1', router);
 
-app.get('/', (req: Request, res: Response) => {
-  res.send('Hello World!');
-});
+// const test = async (req: Request, res: Response) => {
+//   const a = 10;
+//   res.send(a);
+// };
+
+// app.get('/', test);
 
 app.use(globalErrorHandler);
 
