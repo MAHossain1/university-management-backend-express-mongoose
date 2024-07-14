@@ -6,12 +6,18 @@ import { TStudent } from '../student/student.interface';
 import { Student } from '../student/student.model';
 import { TUser } from './user.interface';
 import { User } from './user.model';
-import { generateFacultyId, generateStudentId } from './user.utils';
+import {
+  generateAdminId,
+  generateFacultyId,
+  generateStudentId,
+} from './user.utils';
 import AppError from '../../errors/AppError';
 import httpStatus from 'http-status';
 import { TFaculty } from '../faculty/faculty.interface';
 import { AcademicDepartment } from '../academicDepartment/academicDepartment.model';
 import { Faculty } from '../faculty/faculty.model';
+import { TAdmin } from '../admin/admin.interface';
+import { Admin } from '../admin/admin.model';
 
 const createStudentIntoDB = async (password: string, studentData: TStudent) => {
   // create a user object
@@ -129,7 +135,57 @@ const createFacultyIntoDB = async (password: string, payload: TFaculty) => {
   }
 };
 
+const createAdminIntoDB = async (password: string, payload: TAdmin) => {
+  // create a user object
+  const userData: Partial<TUser> = {};
+
+  // if password is not given, set default password
+  userData.password = password || (config.default_faculty_password as string);
+
+  // set user role
+  userData.role = 'admin';
+
+  const session = await mongoose.startSession();
+
+  try {
+    session.startTransaction();
+
+    // set id to user
+    userData.id = await generateAdminId();
+
+    // create new user first transaction
+    const newUser = await User.create([userData], { session });
+
+    // check whether create user or not
+    if (!newUser.length) {
+      throw new AppError(httpStatus.BAD_REQUEST, 'Failed to create new User.');
+    }
+
+    // set id, _id as user;
+    payload.id = newUser[0].id;
+    payload.user = newUser[0]._id;
+
+    // create new faculty second transaction
+    const newAdmin = await Admin.create([payload], { session });
+
+    if (!newAdmin.length) {
+      throw new AppError(httpStatus.BAD_REQUEST, 'Failed to create new Admin.');
+    }
+
+    await session.commitTransaction();
+    await session.endSession();
+
+    return newAdmin;
+  } catch (error: any) {
+    await session.abortTransaction();
+    await session.endSession();
+
+    throw new Error(error);
+  }
+};
+
 export const UserServices = {
   createStudentIntoDB,
   createFacultyIntoDB,
+  createAdminIntoDB,
 };
