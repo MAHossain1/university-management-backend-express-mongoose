@@ -72,10 +72,29 @@ const deleteSingleCourseFromDB = catchAsync(
   },
 );
 
+const assignFacultiesWithCourseIntoDB = catchAsync(
+  async (req: Request, res: Response): Promise<void> => {
+    const { courseId } = req.params;
+    const { faculties } = req.body;
+    const result = await CourseServices.assignFacultiesWithCourseIntoDB(
+      courseId,
+      faculties,
+    );
+
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: 'Faculties successfully enrolled into course.',
+      data: result,
+    });
+  },
+);
+
 export const CourseControllers = {
   createCourseIntoDB,
   getAllCoursesFromDB,
   getSingleCourseFromDB,
   updateCourseIntoDB,
   deleteSingleCourseFromDB,
+  assignFacultiesWithCourseIntoDB,
 };
