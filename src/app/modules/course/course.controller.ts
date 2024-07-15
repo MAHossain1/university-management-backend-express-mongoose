@@ -90,6 +90,24 @@ const assignFacultiesWithCourseIntoDB = catchAsync(
   },
 );
 
+const removeFacultiesFromCourse = catchAsync(
+  async (req: Request, res: Response): Promise<void> => {
+    const { courseId } = req.params;
+    const { faculties } = req.body;
+    const result = await CourseServices.removeFacultiesFromCourse(
+      courseId,
+      faculties,
+    );
+
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: 'Faculties successfully removed into course.',
+      data: result,
+    });
+  },
+);
+
 export const CourseControllers = {
   createCourseIntoDB,
   getAllCoursesFromDB,
@@ -97,4 +115,5 @@ export const CourseControllers = {
   updateCourseIntoDB,
   deleteSingleCourseFromDB,
   assignFacultiesWithCourseIntoDB,
+  removeFacultiesFromCourse,
 };
