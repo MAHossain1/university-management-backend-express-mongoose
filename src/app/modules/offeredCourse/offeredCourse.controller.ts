@@ -46,24 +46,24 @@ const createOfferedCourse = catchAsync(
 //     },
 //   );
 
-//   const updateSemesterRegistrationIntoDB = catchAsync(
-//     async (req: Request, res: Response): Promise<void> => {
-//       const { id } = req.params;
-//       const result =
-//         await SemesterRegistrationServices.updateSemesterRegistrationIntoDB(
-//           id,
-//           req.body,
-//         );
+const updateOfferedCourse = catchAsync(
+  async (req: Request, res: Response): Promise<void> => {
+    const { id } = req.params;
+    const result = await OfferedCourseServices.updateOfferedCourseIntoDB(
+      id,
+      req.body,
+    );
 
-//       sendResponse(res, {
-//         success: true,
-//         statusCode: httpStatus.OK,
-//         message: 'SingleSemesterRegistration updated successfully',
-//         data: result,
-//       });
-//     },
-//   );
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: 'Offered course updated successfully',
+      data: result,
+    });
+  },
+);
 
 export const OfferedCourseControllers = {
   createOfferedCourse,
+  updateOfferedCourse,
 };
