@@ -47,7 +47,7 @@ const offeredCourseSchema = new Schema<TOfferedCourse>(
         type: String,
         enum: {
           values: Days,
-          message: `{VALUE} is not a valid gender.`,
+          message: `{VALUE} is not a valid day.`,
         },
       },
     ],

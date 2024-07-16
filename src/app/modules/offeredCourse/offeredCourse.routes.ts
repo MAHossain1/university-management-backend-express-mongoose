@@ -5,6 +5,9 @@ import { OfferedCourseControllers } from './offeredCourse.controller';
 
 const router = express.Router();
 
+router.get('/', OfferedCourseControllers.getAllOfferedCourses);
+router.get('/:id', OfferedCourseControllers.getSingleOfferedCourse);
+
 router.post(
   '/create-offered-course',
   validateRequest(
@@ -20,5 +23,7 @@ router.patch(
   ),
   OfferedCourseControllers.updateOfferedCourse,
 );
+
+router.delete('/:id', OfferedCourseControllers.deleteOfferedCourse);
 
 export const OfferedCourseRoutes = router;

@@ -11,7 +11,7 @@ const createSemesterRegistrationIntoDB = async (
 ) => {
   const academicSemester = payload?.academicSemester;
 
-  // check whether 'UPCOMING' / 'ONGOING' semester registration exists or not
+  //* check whether 'UPCOMING' / 'ONGOING' semester registration exists or not
   const isThereAnyUpcomingOrOngoingSemester =
     await SemesterRegistration.findOne({
       $or: [
@@ -27,7 +27,7 @@ const createSemesterRegistrationIntoDB = async (
     );
   }
 
-  // check whether the semester exists or not
+  //* check whether the semester exists or not
   const isAcademicSemesterExists =
     await AcademicSemester.findById(academicSemester);
   if (!isAcademicSemesterExists) {
@@ -37,7 +37,7 @@ const createSemesterRegistrationIntoDB = async (
     );
   }
 
-  // check the semester already registered or not
+  //* check the semester already registered or not
   const isSemesterRegistrationExists = await SemesterRegistration.findOne({
     academicSemester,
   });
@@ -79,7 +79,7 @@ const updateSemesterRegistrationIntoDB = async (
   id: string,
   payload: Partial<TSemesterRegistration>,
 ) => {
-  // check the requested semester whether exists or not
+  //* check the requested semester whether exists or not
   const isSemesterRegistrationExists = await SemesterRegistration.findById(id);
 
   if (!isSemesterRegistrationExists) {
