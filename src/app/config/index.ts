@@ -9,6 +9,7 @@ export default {
   database_url: process.env.DATABASE_URL,
   bcrypt_salt_rounds: process.env.BYCRYPT_SALT_ROUNDS,
   default_password: process.env.DEFAULT_PASS,
+  default_student_password: process.env.DEFAULT_STUDENT_PASS,
   default_faculty_password: process.env.DEFAULT_FACULTY_PASS,
   jwt_access_token: process.env.JWT_ACCESS_TOKEN,
 };

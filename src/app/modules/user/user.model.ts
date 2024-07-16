@@ -13,10 +13,14 @@ const userSchema = new Schema<TUser, UserModel>(
     password: {
       type: String,
       required: true,
+      select: 0,
     },
     needsPasswordChange: {
       type: Boolean,
       default: true,
+    },
+    passwordChangeAt: {
+      type: Date,
     },
     role: {
       type: String,
@@ -59,7 +63,7 @@ userSchema.post('save', async function (doc, next) {
 });
 
 userSchema.statics.isUserExistsByCustomId = async function (id: string) {
-  return await User.findOne({ id });
+  return await User.findOne({ id }).select('+password');
 };
 
 userSchema.statics.isUserDeleted = async function (id: string) {
@@ -72,13 +76,11 @@ userSchema.statics.isUserBlocked = async function (id: string) {
   return user ? user.status === 'blocked' : false;
 };
 
-userSchema.statics.isPasswordMatch = async function (
-  id: string,
-  password: string,
+userSchema.statics.isPasswordMatched = async function (
+  plainTextPassword,
+  hashedPassword,
 ) {
-  const user = await this.findOne({ id });
-
-  return bcrypt.compare(password, user?.password as string);
+  return await bcrypt.compare(plainTextPassword, hashedPassword);
 };
 
 export const User = model<TUser, UserModel>('User', userSchema);
