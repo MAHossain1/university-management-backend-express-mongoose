@@ -16,6 +16,10 @@ export interface UserModel extends Model<TUser> {
   isUserDeleted(id: string): Promise<boolean>;
   isUserBlocked(id: string): Promise<boolean>;
   isPasswordMatched(id: string, password: string): Promise<boolean>;
+  isJWTIssuedBeforePasswordChanged(
+    passwordChangedTimestamp: Date,
+    jwtIssuedTimestamp: number,
+  ): boolean;
 }
 
 export type TUserRole = keyof typeof USER_ROLE;
