@@ -2,6 +2,7 @@ import express from 'express';
 import validateRequest from '../../config/middlewares/validateRequest';
 import { AcademicSemesterValidationSchema } from './academicSemester.validation';
 import { AcademicSemesterControllers } from './academicSemester.controller';
+import auth from '../../config/middlewares/auth';
 
 const router = express.Router();
 
@@ -13,7 +14,11 @@ router.post(
   AcademicSemesterControllers.createAcademicSemester,
 );
 
-router.get('/', AcademicSemesterControllers.getAllAcademicSemester);
+router.get(
+  '/',
+  auth('admin'),
+  AcademicSemesterControllers.getAllAcademicSemester,
+);
 router.get('/:semesterId', AcademicSemesterControllers.getSemesterByID);
 router.patch(
   '/:semesterId',
