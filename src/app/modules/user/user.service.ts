@@ -19,6 +19,7 @@ import {
   generateFacultyId,
   generateStudentId,
 } from './user.utils';
+import { sendImageToCloudinary } from '../../utils/sendImageToCludinary';
 
 const createStudentIntoDB = async (password: string, studentData: TStudent) => {
   // create a user object
@@ -36,6 +37,10 @@ const createStudentIntoDB = async (password: string, studentData: TStudent) => {
   const academicSemester = await AcademicSemester.findById(
     studentData.admissionSemester,
   );
+
+  if (!academicSemester) {
+    throw new AppError(400, 'Admission semester not found');
+  }
 
   const session = await mongoose.startSession();
 
@@ -66,14 +71,10 @@ const createStudentIntoDB = async (password: string, studentData: TStudent) => {
     await session.endSession();
 
     return newStudent;
-  } catch (error) {
+  } catch (error: any) {
     await session.abortTransaction();
     await session.endSession();
-
-    throw new AppError(
-      httpStatus.BAD_REQUEST,
-      'Failed to create user/student.',
-    );
+    throw new Error(error);
   }
 };
 
@@ -160,6 +161,8 @@ const createAdminIntoDB = async (password: string, payload: TAdmin) => {
 
     // set id to user
     userData.id = await generateAdminId();
+
+    sendImageToCloudinary();
 
     // create new user first transaction
     const newUser = await User.create([userData], { session });

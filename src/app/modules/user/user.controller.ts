@@ -42,6 +42,7 @@ const createFaculty = catchAsync(
 
 const createAdmin = catchAsync(
   async (req: Request, res: Response): Promise<void> => {
+    console.log(req.file);
     const { password, admin: adminData } = req.body;
 
     const result = await UserServices.createAdminIntoDB(password, adminData);
