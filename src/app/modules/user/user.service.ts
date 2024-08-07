@@ -1,7 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import httpStatus from 'http-status';
+import { JwtPayload } from 'jsonwebtoken';
 import mongoose from 'mongoose';
 import config from '../../config';
+import AppError from '../../errors/AppError';
+import { AcademicDepartment } from '../academicDepartment/academicDepartment.model';
 import { AcademicSemester } from '../academicSemester/academicSemester.model';
+import { TAdmin } from '../admin/admin.interface';
+import { Admin } from '../admin/admin.model';
+import { TFaculty } from '../faculty/faculty.interface';
+import { Faculty } from '../faculty/faculty.model';
 import { TStudent } from '../student/student.interface';
 import { Student } from '../student/student.model';
 import { TUser } from './user.interface';
@@ -11,14 +19,6 @@ import {
   generateFacultyId,
   generateStudentId,
 } from './user.utils';
-import AppError from '../../errors/AppError';
-import httpStatus from 'http-status';
-import { TFaculty } from '../faculty/faculty.interface';
-import { AcademicDepartment } from '../academicDepartment/academicDepartment.model';
-import { Faculty } from '../faculty/faculty.model';
-import { TAdmin } from '../admin/admin.interface';
-import { Admin } from '../admin/admin.model';
-import { verifyToken } from '../auth/auth.utils';
 
 const createStudentIntoDB = async (password: string, studentData: TStudent) => {
   // create a user object
@@ -192,15 +192,8 @@ const createAdminIntoDB = async (password: string, payload: TAdmin) => {
   }
 };
 
-const getMe = async (token: string) => {
-  if (!token) {
-    throw new AppError(httpStatus.NOT_FOUND, 'Token not found!');
-  }
-
-  const { userId, role } = verifyToken(
-    token,
-    config.jwt_access_token as string,
-  );
+const getMe = async (requestUser: JwtPayload) => {
+  const { userId, role } = requestUser;
 
   let result = null;
 
@@ -217,9 +210,15 @@ const getMe = async (token: string) => {
   return result;
 };
 
+const changeStatus = async (id: string, payload: { status: string }) => {
+  const result = await User.findByIdAndUpdate(id, payload, { new: true });
+  return result;
+};
+
 export const UserServices = {
   createStudentIntoDB,
   createFacultyIntoDB,
   createAdminIntoDB,
   getMe,
+  changeStatus,
 };

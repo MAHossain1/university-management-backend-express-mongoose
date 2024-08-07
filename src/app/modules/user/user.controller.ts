@@ -8,8 +8,6 @@ const createStudent = catchAsync(
   async (req: Request, res: Response): Promise<void> => {
     const { password, student: studentData } = req.body;
 
-    // const zodParsedData = studentValidationSchema.parse(studentData);
-
     const result = await UserServices.createStudentIntoDB(
       password,
       studentData,
@@ -58,9 +56,7 @@ const createAdmin = catchAsync(
 );
 
 const getMe = catchAsync(async (req: Request, res: Response): Promise<void> => {
-  const token = req.headers.authorization as string;
-
-  const result = await UserServices.getMe(token);
+  const result = await UserServices.getMe(req.user!);
 
   sendResponse(res, {
     success: true,
@@ -70,9 +66,24 @@ const getMe = catchAsync(async (req: Request, res: Response): Promise<void> => {
   });
 });
 
+const changeStatus = catchAsync(
+  async (req: Request, res: Response): Promise<void> => {
+    const id = req.params.id;
+    const result = await UserServices.changeStatus(id, req.body);
+
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: 'User status changed successfully.',
+      data: result,
+    });
+  },
+);
+
 export const UserControllers = {
   createStudent,
   createFaculty,
   createAdmin,
   getMe,
+  changeStatus,
 };
