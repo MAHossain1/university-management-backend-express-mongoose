@@ -21,7 +21,11 @@ import {
 } from './user.utils';
 import { sendImageToCloudinary } from '../../utils/sendImageToCludinary';
 
-const createStudentIntoDB = async (password: string, studentData: TStudent) => {
+const createStudentIntoDB = async (
+  file: any,
+  password: string,
+  studentData: TStudent,
+) => {
   // create a user object
   const userData: Partial<TUser> = {};
 
@@ -56,9 +60,15 @@ const createStudentIntoDB = async (password: string, studentData: TStudent) => {
       throw new AppError(httpStatus.BAD_REQUEST, 'Failed to create new user');
     }
 
+    const imageName = `${userData.id}_${studentData?.name?.firstName}`;
+    const path = file?.path;
+
+    const profileImg = await sendImageToCloudinary(imageName, path);
+
     // set id, _id as user
     studentData.id = newUser[0].id;
     studentData.user = newUser[0]._id;
+    studentData.profileImg = profileImg?.secure_url;
 
     // create a student transaction 2
     const newStudent = await Student.create([studentData], { session });
@@ -78,7 +88,11 @@ const createStudentIntoDB = async (password: string, studentData: TStudent) => {
   }
 };
 
-const createFacultyIntoDB = async (password: string, payload: TFaculty) => {
+const createFacultyIntoDB = async (
+  file: any,
+  password: string,
+  payload: TFaculty,
+) => {
   // create a user object
   const userData: Partial<TUser> = {};
 
@@ -116,9 +130,14 @@ const createFacultyIntoDB = async (password: string, payload: TFaculty) => {
       throw new AppError(httpStatus.BAD_REQUEST, 'Failed to create new User.');
     }
 
+    const imageName = `${userData.id}_${payload?.name?.firstName}`;
+    const path = file?.path;
+
+    const profileImg = await sendImageToCloudinary(imageName, path);
     // set id, _id as user;
     payload.id = newUser[0].id;
     payload.user = newUser[0]._id;
+    payload.profileImg = profileImg?.secure_url;
 
     // create new faculty second transaction
     const newFaculty = await Faculty.create([payload], { session });

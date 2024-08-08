@@ -9,6 +9,7 @@ const createStudent = catchAsync(
     const { password, student: studentData } = req.body;
 
     const result = await UserServices.createStudentIntoDB(
+      req.file,
       password,
       studentData,
     );
@@ -27,6 +28,7 @@ const createFaculty = catchAsync(
     const { password, faculty: facultyData } = req.body;
 
     const result = await UserServices.createFacultyIntoDB(
+      req.file,
       password,
       facultyData,
     );
