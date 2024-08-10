@@ -3,7 +3,7 @@ import validateRequest from '../../config/middlewares/validateRequest';
 import { AcademicFacultyControllers } from './academicFaculty.controller';
 import { AcademicFacultyValidationSchema } from './academicFaculty.validation';
 import auth from '../../config/middlewares/auth';
-import { USER_ROLE } from '../user/user.contant';
+import { USER_ROLE } from '../user/user.constant';
 
 const router = express.Router();
 

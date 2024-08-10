@@ -5,7 +5,7 @@ import validateRequest from '../../config/middlewares/validateRequest';
 import { upload } from '../../utils/sendImageToCludinary';
 import { AdminValidations } from '../admin/admin.validation';
 import { studentValidationSchemas } from '../student/student.validation';
-import { USER_ROLE } from './user.contant';
+import { USER_ROLE } from './user.constant';
 import { UserControllers } from './user.controller';
 import { UserValidation } from './user.validation';
 import { createFacultyValidationSchema } from '../faculty/faculty.validation';

@@ -1,7 +1,7 @@
 import express from 'express';
 import { FacultyControllers } from './faculty.controller';
 import auth from '../../config/middlewares/auth';
-import { USER_ROLE } from '../user/user.contant';
+import { USER_ROLE } from '../user/user.constant';
 import validateRequest from '../../config/middlewares/validateRequest';
 import { updateFacultyValidationSchema } from './faculty.validation';
 
