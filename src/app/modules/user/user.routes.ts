@@ -14,7 +14,7 @@ const router = express.Router();
 
 router.post(
   '/create-student',
-  auth(USER_ROLE.admin),
+  auth(USER_ROLE.superAdmin, USER_ROLE.admin),
   upload.single('file'),
   parseJSONData,
   validateRequest(studentValidationSchemas.createStudentValidationSchema),
