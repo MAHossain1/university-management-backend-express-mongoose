@@ -4,11 +4,9 @@ import httpStatus from 'http-status';
 import catchAsync from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponse';
 import { StudentServices } from './student.service';
-// import studentValidationSchema from './student.joi.validation';
 
 const getStudentsFromDB = catchAsync(async (req: Request, res: Response) => {
   const result = await StudentServices.getStudentsFromDB(req.query);
-  // console.log(req.query);
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
