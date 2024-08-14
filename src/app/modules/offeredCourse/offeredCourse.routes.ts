@@ -8,20 +8,31 @@ import { USER_ROLE } from '../user/user.constant';
 const router = express.Router();
 
 router.get(
+  '/my-offered-courses',
+  auth(USER_ROLE.student),
+  OfferedCourseControllers.getMyOfferedCourses,
+);
+
+router.get(
   '/',
+  auth(USER_ROLE.superAdmin, USER_ROLE.admin, USER_ROLE.faculty),
+  OfferedCourseControllers.getAllOfferedCourses,
+);
+
+router.get(
+  '/:id',
   auth(
     USER_ROLE.superAdmin,
     USER_ROLE.admin,
     USER_ROLE.faculty,
     USER_ROLE.student,
   ),
-  OfferedCourseControllers.getAllOfferedCourses,
+  OfferedCourseControllers.getSingleOfferedCourse,
 );
-router.get('/:id', OfferedCourseControllers.getSingleOfferedCourse);
 
 router.post(
   '/create-offered-course',
-  auth(USER_ROLE.superAdmin, USER_ROLE.admin, USER_ROLE.student),
+  auth(USER_ROLE.superAdmin, USER_ROLE.admin),
   validateRequest(
     OfferedCourseValidationSchema.createOfferedCourseValidationSchema,
   ),
@@ -30,7 +41,7 @@ router.post(
 
 router.patch(
   '/:id',
-  auth(USER_ROLE.superAdmin, USER_ROLE.admin, USER_ROLE.faculty),
+  auth(USER_ROLE.superAdmin, USER_ROLE.admin),
   validateRequest(
     OfferedCourseValidationSchema.updateOfferedCourseValidationSchema,
   ),
@@ -39,7 +50,7 @@ router.patch(
 
 router.delete(
   '/:id',
-  auth(USER_ROLE.superAdmin, USER_ROLE.admin, USER_ROLE.faculty),
+  auth(USER_ROLE.superAdmin, USER_ROLE.admin),
   OfferedCourseControllers.deleteOfferedCourse,
 );
 
