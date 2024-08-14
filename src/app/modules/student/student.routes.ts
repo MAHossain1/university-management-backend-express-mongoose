@@ -14,7 +14,7 @@ router.get(
 );
 router.patch(
   '/:studentId',
-  auth(USER_ROLE.superAdmin, USER_ROLE.admin, USER_ROLE.faculty),
+  auth(USER_ROLE.superAdmin, USER_ROLE.admin),
   validateRequest(studentValidationSchemas.updateStudentValidationSchema),
   StudentController.updateStudent,
 );
@@ -26,7 +26,7 @@ router.get(
 
 router.delete(
   '/:studentId',
-  auth(USER_ROLE.superAdmin, USER_ROLE.admin, USER_ROLE.faculty),
+  auth(USER_ROLE.superAdmin, USER_ROLE.admin),
   StudentController.deleteStudent,
 );
 

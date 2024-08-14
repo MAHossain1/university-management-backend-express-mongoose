@@ -59,17 +59,3 @@ const storage = multer.diskStorage({
 });
 
 export const upload = multer({ storage: storage });
-
-//!making customize async function
-
-/**
- * return new Promise((resolve, reject) => {
- * cloudinary.uploader
-    .upload(path, {
-      public_id: imageName,
-    })
-    .catch((error) => {
-      console.log(error);
-    });
- * })
- * */
