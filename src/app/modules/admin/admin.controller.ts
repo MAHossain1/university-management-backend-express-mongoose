@@ -12,7 +12,8 @@ const getAllAdmins = catchAsync(
       success: true,
       statusCode: httpStatus.OK,
       message: 'Admins retrieved successfully',
-      data: result,
+      meta: result.meta,
+      data: result.result,
     });
   },
 );

@@ -17,9 +17,12 @@ router.post(
 );
 
 router.get('/', AcademicFacultyControllers.getAllAcademicFaculty);
+
 router.get('/:facultyId', AcademicFacultyControllers.getFacultyByID);
+
 router.patch(
   '/:facultyId',
+  auth(USER_ROLE.superAdmin, USER_ROLE.admin),
   validateRequest(
     AcademicFacultyValidationSchema.updateAcademicFacultyValidationSchema,
   ),

@@ -29,7 +29,8 @@ const getAllAcademicSemester = catchAsync(
       success: true,
       statusCode: httpStatus.OK,
       message: 'Academic Semesters retrieved successfully',
-      data: result,
+      meta: result.meta,
+      data: result.result,
     });
   },
 );

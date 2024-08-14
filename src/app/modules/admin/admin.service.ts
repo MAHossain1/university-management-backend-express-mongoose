@@ -17,8 +17,9 @@ const getAllAdminFromDB = async (query: Record<string, unknown>) => {
     .fields();
 
   const result = await academicSemesterQuery.modelQuery;
+  const meta = await academicSemesterQuery.countTotal();
 
-  return result;
+  return { meta, result };
 };
 
 const getAdminByID = async (id: string) => {

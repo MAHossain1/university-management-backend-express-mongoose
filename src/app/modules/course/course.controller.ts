@@ -25,7 +25,8 @@ const getAllCoursesFromDB = catchAsync(
       success: true,
       statusCode: httpStatus.OK,
       message: 'Courses retrieved successfully',
-      data: result,
+      meta: result.meta,
+      data: result.result,
     });
   },
 );
